@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: busybox:latest
+        command:
+        - /bin/sh
+        - -c
+        - >
+          echo "Processing data..." && sleep 5 && echo "Data processing complete!"
+      restartPolicy: OnFailure
+  backoffLimit: 4

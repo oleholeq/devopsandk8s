@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multicontainer-pod
+spec:
+  volumes:
+  - name: shared-html
+    emptyDir: {}
+  containers:
+  - name: nginx-container
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: shared-html
+      mountPath: /usr/share/nginx/html
+  - name: busybox-sidecar
+    image: busybox:latest
+    command: ["/bin/sh", "-c"]
+    args:
+      - |
+        while true; do
+          echo "Hello from the sidecar! Served by Nginx." > /data/index.html
+          echo "Last updated: $(date)" >> /data/index.html
+          sleep 5
+        done
+    volumeMounts:
+    - name: shared-html
+      mountPath: /data

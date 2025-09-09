@@ -1,0 +1,40 @@
+image: golang:1.21
+
+stages:
+  - lint
+  - test
+  - build
+
+variables:
+  OS: "linux"
+  ARCH: "amd64"
+  SKIP_LINT: "false"
+  SKIP_TESTS: "false"
+  TARGETOS: "$TARGETOS"
+  TARGETARCH: "$TARGETARCH"
+
+lint:
+  stage: lint
+  rules:
+    - if: '$SKIP_LINT == "true"'
+      when: never
+    - when: on_success
+  script:
+    - echo "Running linter..."
+    - make lint
+
+test:
+  stage: test
+  rules:
+    - if: '$SKIP_TESTS == "true"'
+      when: never
+    - when: on_success
+  script:
+    - echo "Running tests..."
+    - make test
+
+build:
+  stage: build
+  script:
+    - echo "Building for $TARGETOS/$TARGETARCH..."
+    - make build TARGETOS=$TARGETOS TARGETARCH=$TARGETARCH

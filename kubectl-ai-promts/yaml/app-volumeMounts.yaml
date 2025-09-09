@@ -1,0 +1,42 @@
+    apiVersion: apps/v1                                                       
+    kind: Deployment                                                          
+    metadata:                                                                 
+      creationTimestamp: null                                                 
+      labels:                                                                 
+        app: nginx                                                            
+      name: nginx                                                             
+    spec:                                                                     
+      replicas: 2                                                             
+      selector:                                                               
+        matchLabels:                                                          
+          app: nginx                                                          
+      strategy: {}                                                            
+      template:                                                               
+        metadata:                                                             
+          creationTimestamp: null                                             
+          labels:                                                             
+            app: nginx                                                        
+        spec:                                                                 
+          containers:                                                         
+          - image: nginx                                                      
+            name: nginx                                                       
+            livenessProbe:                                                    
+              httpGet:                                                        
+                path: /                                                       
+                port: 80                                                      
+              initialDelaySeconds: 15                                         
+              periodSeconds: 20                                               
+            readinessProbe:                                                   
+              httpGet:                                                        
+                path: /                                                       
+                port: 80                                                      
+              initialDelaySeconds: 5                                          
+              periodSeconds: 10                                               
+            resources: {}                                                     
+            volumeMounts:                                                     
+            - name: cache-volume                                              
+              mountPath: /var/cache/nginx                                     
+          volumes:                                                            
+          - name: cache-volume                                                
+            emptyDir: {}                                                      
+    status: {}         
